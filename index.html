@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ean scanner test</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            div {
+                display: flex;
+                flex-direction: column;
+                width: 50%;
+            }
+            div > * {
+                height: 50px;
+                font-size: 2rem;
+            }
+            input {
+                margin-bottom: 2rem;
+                padding: 0 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <input type="number" />
+            <button>Scanna</button>
+        </div>
+
+        <script
+            type="text/javascript"
+            src="https://unpkg.com/@zxing/browser@latest"
+        ></script>
+        <script type="text/javascript">
+            window.addEventListener("load", async () => {
+                const codeReader = new ZXingBrowser.BrowserQRCodeReader();
+
+                const videoInputDevices =
+                    await ZXingBrowser.BrowserCodeReader.listVideoInputDevices();
+
+                // choose your media device (webcam, frontal camera, back camera, etc.)
+                const selectedDeviceId = videoInputDevices[0].deviceId;
+
+                console.log(
+                    `Started decode from camera with id ${selectedDeviceId}`
+                );
+
+                const previewElem = document.querySelector(
+                    "#test-area-qr-code-webcam > video"
+                );
+
+                // you can use the controls to stop() the scan or switchTorch() if available
+                const controls = await codeReader.decodeFromVideoDevice(
+                    selectedDeviceId,
+                    previewElem,
+                    (result, error, controls) => {
+                        // use the result and error values to choose your actions
+                        // you can also use controls API in this scope like the controls
+                        // returned from the method.
+                    }
+                );
+
+                // stops scanning after 20 seconds
+                setTimeout(() => controls.stop(), 20000);
+            });
+        </script>
+    </body>
+</html>
